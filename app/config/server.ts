@@ -166,6 +166,9 @@ export const getServerSideConfig = () => {
     fastBaseUrl,
     fastModels,
     fastChannel,
-
+    
+    enableIPBanner: !!process.env.ENABLE_IP_BANNER,
+    cleanIPBannerInterval: parseInt(process.env.CLEAN_IP_BANNER_INTERVAL || "86400000", 10),
+    errorLimitIPBanner: parseInt(process.env.ERROR_LIMIT_IP_BANNER || "10", 10),
   };
 };

@@ -3,6 +3,27 @@ import { getServerSideConfig } from "../config/server";
 import md5 from "spark-md5";
 import { ACCESS_CODE_PREFIX, ModelProvider } from "../constant";
 
+// 定义一个包含错误计数的类型
+type IpRecord = {
+  count: number;
+};
+// 用来记录错误次数的Map，键为IP地址，值为IpRecord
+const ipErrorCountMap = new Map<string, IpRecord>();
+
+// 获取清理间隔时间（毫秒），从环境变量中读取，缺省为 1 天（86400000 毫秒）
+const serverConfig = getServerSideConfig();
+const CLEAN_INTERVAL = serverConfig.cleanIPBannerInterval;
+
+// 错误次数限制，缺省为 10
+const ERROR_LIMIT = serverConfig.errorLimitIPBanner;
+
+// 设置定时器定期清理IP记录
+setInterval(() => {
+  ipErrorCountMap.clear();
+  console.log("[Cleanup] Cleared all IP records.");
+}, CLEAN_INTERVAL);
+
+
 function getIP(req: NextRequest) {
   let ip = req.ip ?? req.headers.get("x-real-ip");
   const forwardedFor = req.headers.get("x-forwarded-for");
@@ -40,7 +61,35 @@ export function auth(req: NextRequest, modelProvider: ModelProvider) {
   console.log("[User IP] ", userIP);
   console.log("[Time] ", new Date().toLocaleString());
 
+  // 获取 enableIPBanner 环境变量，如果未设置或为 0，则不开启 IP 拒绝模式
+  const enableIPBanner = serverConfig.enableIPBanner;
+  if (enableIPBanner) {
+    const ipRecord = ipErrorCountMap.get(userIP);
+
+    // 检查该IP的错误次数是否达到限制
+    if (ipRecord && ipRecord.count >= ERROR_LIMIT) {
+      console.log(`[IP Banner] ${userIP} has reached the error limit.`);
+      return {
+        error: true,
+        msg: `You have made too many incorrect attempts. Your IP (${userIP}) has been blacklisted. Please contact the administrator to have it unblocked.`,
+      };
+    }
+  }
+
   if (serverConfig.needCode && !serverConfig.codes.has(hashedCode) && !apiKey) {
+    if (enableIPBanner) {
+      const ipRecord = ipErrorCountMap.get(userIP);
+
+      if (ipRecord) {
+        // 增加错误次数
+        ipRecord.count += 1;
+        ipErrorCountMap.set(userIP, ipRecord);
+      } else {
+        // 记录新的错误次数
+        ipErrorCountMap.set(userIP, { count: 1 });
+      }
+      console.log(`[Auth] wrong access code from IP ${userIP}, count: ${ipErrorCountMap.get(userIP)?.count}`);
+    }
     return {
       error: true,
       msg: !accessCode ? "empty access code" : "wrong access code, don't try to crack the access code, your IP has been record: " + userIP,
@@ -54,9 +103,14 @@ export function auth(req: NextRequest, modelProvider: ModelProvider) {
     };
   }
 
+  // Reset the error count on successful auth
+  if (enableIPBanner && ipErrorCountMap.has(userIP)) {
+    ipErrorCountMap.delete(userIP);
+  }
+
   // if user does not provide an api key, inject system api key
   if (!apiKey) {
-    const serverConfig = getServerSideConfig();
+    // const serverConfig = getServerSideConfig();
 
     // const systemApiKey =
     //   modelProvider === ModelProvider.GeminiPro
