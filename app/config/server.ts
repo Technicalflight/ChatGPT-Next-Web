@@ -46,6 +46,9 @@ declare global {
       // sidebar title
       SIDEBAR_TITLE?: string;
       SIDEBAR_SUBTITLE?: string;
+
+      // cloud backup
+      CLOUD_BACKUP_SERVER_ADDRESS?: string;
     }
   }
 }
@@ -187,5 +190,7 @@ export const getServerSideConfig = () => {
     fastBaseUrl,
     fastModels,
     fastChannel,
+
+    CLOUD_BACKUP_SERVER_ADDRESS: process.env.CLOUD_BACKUP_SERVER_ADDRESS || "",
   };
 };

@@ -26,6 +26,8 @@ const localStorage = safeLocalStorage();
 const serverAddressKey = "serverAddress";
 
 export function CloudBackupPage() {
+  const { fileSyncServer } = useAccessStore();
+
   const navigate = useNavigate();
   const [serverAddress, setServerAddress] = useState("");
   const [loading, setLoading] = useState(false);
@@ -60,6 +62,8 @@ export function CloudBackupPage() {
     const savedAddress = localStorage.getItem(serverAddressKey);
     if (savedAddress) {
       setServerAddress(savedAddress);
+    } else {
+      setServerAddress(fileSyncServer);
     }
   }, []);
 

@@ -56,6 +56,8 @@ const DEFAULT_ACCESS_STATE = {
   sidebarTitle: "",
   sidebarSubTitle: "",
 
+  // cloud config
+  fileSyncServer: "",
   // tts config
   edgeTTSVoiceName: "zh-CN-YunxiNeural",
 };
@@ -71,6 +73,10 @@ export const useAccessStore = createPersistStore(
     setSideBarSubTitle() {
       this.fetch();
       return get().sidebarSubTitle;
+    },
+    setFileSyncServer() {
+      this.fetch();
+      return get().fileSyncServer;
     },
     enabledAccessControl() {
       this.fetch();

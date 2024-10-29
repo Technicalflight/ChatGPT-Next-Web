@@ -17,6 +17,7 @@ const DANGER_CONFIG = {
   defaultModel: serverConfig.defaultModel,
   sidebarTitle: siderbarConfig.title,
   sidebarSubTitle: siderbarConfig.subTitle,
+  fileSyncServer: serverConfig.CLOUD_BACKUP_SERVER_ADDRESS,
 };
 
 declare global {
