@@ -28,6 +28,7 @@ jobs:
           images: justma/chatgpt-next-chat
           tags: |
             type=raw,value=latest
+            type=remver,pattern={{version}}
             type=ref,event=tag
       
       - 
