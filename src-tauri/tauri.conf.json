@@ -108,10 +108,8 @@
     "windows": [
       {
         "fullscreen": true,
-        "height": 600,
         "resizable": true,
         "title": "NextChat",
-        "width": 960,
         "hiddenTitle": true,
         "titleBarStyle": "Overlay"
       }
