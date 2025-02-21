@@ -189,7 +189,6 @@ export function SideBarHeader(props: {
             {typeof subTitle === "string" ? renderSubTitle(subTitle) : subTitle}
           </div>
         </div>
-        <div className={styles["sidebar-logo"] + " no-dark"}>{logo}</div>
       </div>
       {children}
     </Fragment>
