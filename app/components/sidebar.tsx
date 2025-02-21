@@ -246,49 +246,20 @@ export function SideBar(props: { className?: string }) {
         logo={<ChatGptIcon />}
         shouldNarrow={shouldNarrow}
       >
-        <div className={styles["sidebar-header-bar"]}>
-          <IconButton
-            icon={<MaskIcon />}
-            text={shouldNarrow ? undefined : Locale.Mask.Name}
-            className={styles["sidebar-bar-button"]}
+        <IconButton
+            icon={<AddIcon />}
+            text={shouldNarrow ? undefined : Locale.Home.NewChat}
+            className={`${styles["sidebar-bar-button"]} ${styles["large-button"]}`} // 添加放大样式
             onClick={() => {
-              if (config.dontShowMaskSplashScreen !== true) {
-                navigate(Path.NewChat, { state: { fromHome: true } });
+              if (config.dontShowMaskSplashScreen) {
+                chatStore.newSession();
+                navigate(Path.Chat);
               } else {
-                navigate(Path.Masks, { state: { fromHome: true } });
+                navigate(Path.NewChat);
               }
             }}
             shadow
           />
-          <IconButton
-            icon={<DiscoveryIcon />}
-            text={shouldNarrow ? undefined : Locale.Discovery.Name}
-            className={styles["sidebar-bar-button"]}
-            onClick={() => setShowPluginSelector(true)}
-            shadow
-          />
-        </div>
-        {showPluginSelector && (
-          <Selector
-            items={[
-              {
-                title: "👇 Please select the plugin you need to use",
-                value: "-",
-                disable: true,
-              },
-              ...PLUGINS.map((item) => {
-                return {
-                  title: item.name,
-                  value: item.path,
-                };
-              }),
-            ]}
-            onClose={() => setShowPluginSelector(false)}
-            onSelection={(s) => {
-              navigate(s[0], { state: { fromHome: true } });
-            }}
-          />
-        )}
       </SideBarHeader>
       <SideBarBody
         onClick={(e) => {
@@ -321,31 +292,7 @@ export function SideBar(props: { className?: string }) {
                 />
               </Link>
             </div>
-            <div className={styles["sidebar-action"]}>
-              <a href={REPO_URL} target="_blank" rel="noopener noreferrer">
-                <IconButton
-                  aria={Locale.Export.MessageFromChatGPT}
-                  icon={<GithubIcon />}
-                  shadow
-                />
-              </a>
-            </div>
           </>
-        }
-        secondaryAction={
-          <IconButton
-            icon={<AddIcon />}
-            text={shouldNarrow ? undefined : Locale.Home.NewChat}
-            onClick={() => {
-              if (config.dontShowMaskSplashScreen) {
-                chatStore.newSession();
-                navigate(Path.Chat);
-              } else {
-                navigate(Path.NewChat);
-              }
-            }}
-            shadow
-          />
         }
       />
     </SideBarContainer>
