@@ -2001,51 +2001,6 @@ function _Chat() {
                 }
               >
                 <div className={styles["chat-message-container"]}>
-                  <div className={styles["chat-message-header"]}>
-                    <div className={styles["chat-message-avatar"]}>
-                      {isUser ? (
-                        <Avatar avatar={config.avatar} />
-                      ) : (
-                        <>
-                          {["system"].includes(message.role) ? (
-                            <Avatar avatar="2699-fe0f" />
-                          ) : (
-                            <MaskAvatar
-                              avatar={session.mask.avatar}
-                              model={
-                                message.model || session.mask.modelConfig.model
-                              }
-                            />
-                          )}
-                        </>
-                      )}
-                    </div>
-                    {!isUser && (
-                      <div className={styles["chat-model-name"]}>
-                        {message.model}
-                      </div>
-                    )}
-
-                    {!isMobileScreen && showActions && (
-                      <div className={styles["chat-message-actions"]}>
-                        <div className={styles["chat-input-actions"]}>
-                          <ChatInputActions
-                            message={message}
-                            onUserStop={onUserStop}
-                            onResend={onResend}
-                            onDelete={onDelete}
-                            onPinMessage={onPinMessage}
-                            copyToClipboard={copyToClipboard}
-                            openaiSpeech={openaiSpeech}
-                            setUserInput={setUserInput}
-                            speechStatus={speechStatus}
-                            config={config}
-                            i={i}
-                          />
-                        </div>
-                      </div>
-                    )}
-                  </div>
                   {showTyping && (
                     <div className={styles["chat-message-status"]}>
                       {Locale.Chat.Typing}
