@@ -1963,21 +1963,6 @@ function _Chat() {
               }}
             />
           </div>
-          {showMaxIcon && (
-            <div className="window-action-button">
-              <IconButton
-                icon={config.tightBorder ? <MinIcon /> : <MaxIcon />}
-                bordered
-                title={Locale.Chat.Actions.FullScreen}
-                aria={Locale.Chat.Actions.FullScreen}
-                onClick={() => {
-                  config.update(
-                    (config) => (config.tightBorder = !config.tightBorder),
-                  );
-                }}
-              />
-            </div>
-          )}
         </div>
 
         <PromptToast
