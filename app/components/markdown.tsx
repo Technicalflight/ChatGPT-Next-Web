@@ -488,7 +488,7 @@ function formatThinkText(text: string): string {
   }
 
   // 处理完整的 think 标签
-  const pattern = /^<think>([\s\S]*?)<\/think>/;
+  const pattern = /<think>([\s\S]*?)<\/think>/;
   return text.replace(pattern, (match, thinkContent) => {
     // 渲染为"思考完成"状态
     // 如果 thinkContent 为空，则渲染为"没有思考过程"状态
